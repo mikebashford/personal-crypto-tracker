@@ -1,8 +1,13 @@
 var cryptoCurrencies = [];
 var cryptoNames = [];
+var cryptoName = "";
+var check = false;
+var executed = false;
 
 function getCryptoCurrencies () {
-    
+  
+  if (!executed){
+  executed = true;
   var apiUrl = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd";
 
   console.log(apiUrl);
@@ -21,6 +26,7 @@ function getCryptoCurrencies () {
       console.log(response.status);
     }
   });
+  }
 };
 
 var getCrytpoPrices = function() {
@@ -47,10 +53,44 @@ function cryptoListGeneration (){
   }
   console.log(cryptoNames)
 };
+
 $( function() {
     $( "#crypto" ).autocomplete({
     source: cryptoNames
   });
 } );
 
+function displayCryptoInfo(i){
+$("#crypto-values").append('<div id="crypto-display"><h3>'+cryptoName+'</h3></div>');
+
+price = $('<div>'+ cryptoCurrencies[i].current_price+'USD</div>');
+$("#crypto-values").append(price);
+}
+
+var formSubmitHandler = function(event) {
+  // prevent page from refreshing
+  event.preventDefault();
+  
+  // get value from input element
+  cryptoName = $("input").first().val();
+
+  if (cryptoName) {
+    var check = false;
+    for (i=0; i<cryptoNames.length; i++){
+      if (cryptoName === cryptoNames[i]){
+        displayCryptoInfo(i);
+        check = true;
+      }
+    }
+    console.log (cryptoName, ' ', check); 
+    
+    // clear old content
+    $("input").first().val('');
+  } else {
+    alert("Please enter a valid crypto");
+  }
+};
+
 getCryptoCurrencies();
+
+$("#crypto-input").submit(formSubmitHandler);
