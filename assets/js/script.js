@@ -143,12 +143,13 @@ var formSubmitHandler = function(event) {
     // clear old content
     $("input").first().val('');  
 };
-
+// saves crypto name to local storage
 function saveCryptoLocally (i){
   savedCrypto.push(cryptoNames[i]);
   localStorage.setItem('SavedCrypto', JSON.stringify(savedCrypto));
 }
 
+// deletes crypto from local storage when cleared from page
 function deleteCryptoLocally(name){
   for (a=0; a<savedCrypto.length; a++){
     if (name === savedCrypto[a]){
@@ -159,6 +160,7 @@ function deleteCryptoLocally(name){
   }
 }
 
+//loads the locally saved cryptos
 function loadCryptoLocally(){
   savedCrypto = JSON.parse(localStorage.getItem("SavedCrypto"));
   if (savedCrypto != null){
@@ -166,7 +168,7 @@ function loadCryptoLocally(){
       cryptoName = savedCrypto[b];
       for (i=0; i<cryptoNames.length; i++){
         if (cryptoName === cryptoNames[i]){
-          displayCryptoInfo(i);  //returns i as unique identifier for each crypto based on location in data array
+          displayCryptoInfo(i);  
       }}
   }} else {
     savedCrypto = [];
@@ -174,7 +176,5 @@ function loadCryptoLocally(){
 }
 
 getCryptoCurrencies();  //executes creation of crypto name array
-
-
 
 $("#crypto-input").submit(formSubmitHandler);  //listens for user to click search button
