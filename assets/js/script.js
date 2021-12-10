@@ -161,13 +161,17 @@ function deleteCryptoLocally(name){
 
 function loadCryptoLocally(){
   savedCrypto = JSON.parse(localStorage.getItem("SavedCrypto"));
-  for (b=0; b<savedCrypto.length; b++){    
-    cryptoName = savedCrypto[b];
-    for (i=0; i<cryptoNames.length; i++){
-      if (cryptoName === cryptoNames[i]){
+  if (savedCrypto != null){
+    for (b=0; b<savedCrypto.length; b++){    
+      cryptoName = savedCrypto[b];
+      for (i=0; i<cryptoNames.length; i++){
+        if (cryptoName === cryptoNames[i]){
           displayCryptoInfo(i);  //returns i as unique identifier for each crypto based on location in data array
-  }}
-}}
+      }}
+  }} else {
+    savedCrypto = [];
+  }
+}
 
 getCryptoCurrencies();  //executes creation of crypto name array
 
