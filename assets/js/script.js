@@ -73,27 +73,28 @@ coinNofield = $('<fieldset></fieldset>');
 coinNofield.append('<input id="coins'+i+'" type="text" placeholder="Amount of Coins" />');
 coinNofield.append('<select id="currency" name="currency"><option value="USD">USD</option><option value="EUR">EUR</option></select>');
 coinNofield.append('<button type="submit" class="pure-button pure-button-secondary">Submit</button>');
-coinNofield.append('<button id="clear" type="click" class="pure-button pure-button-primary">Clear</button>')
+coinNofield.append('<span id="clear'+i+'"><button type="click" class="pure-button pure-button-primary">Clear</button></span>')
 coinNoInput.append(coinNofield);
 cryptoDisplay.append(coinNoInput);
 $("#crypto-values").append(cryptoDisplay);
 var formCheck = "#coin-number"+i;
+var clearCheck = "#clear"+i;
 $(formCheck).submit(function(event){
   event.preventDefault();
   let coins = "#coins"+i;
   let input = $(coins).val();
-  console.log(input);
+  console.log(input, formCheck, clearCheck);
   let stringConvert = parseFloat(input);
   let value = cryptoCurrencies[i].current_price * stringConvert;
   let setValue = formatter.format(value);
   let displayValue = "displayValue"+i;
   document.getElementById(displayValue).innerText = setValue;
 });
-$("#clear").click(function(event){
+$(clearCheck).click(function(event){
   event.preventDefault();
-  let clearBlock = "crypto-display"+i;
+  let clearBlock = "#crypto-display"+i;
   console.log("cleared");
-  document.getElementById(clearBlock).innerHTML = "";
+  $(clearBlock).remove();
 });
 }
 
