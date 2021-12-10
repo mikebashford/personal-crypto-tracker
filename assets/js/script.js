@@ -65,6 +65,16 @@ $("#crypto-values").append('<div id="crypto-display"><h3>'+cryptoName+'</h3></di
 
 price = $('<div>'+ cryptoCurrencies[i].current_price+'USD</div>');
 $("#crypto-values").append(price);
+$("#crypto-values").append('<form id="coin-number"><input id="coins" type="text" /><button type="submit" class="pure-button pure-button-secondary">Coins Owned</button></form>');
+$("#coin-number").submit(function(event){
+  event.preventDefault();
+  let input = $("#coins").val();
+  console.log(input);
+  let stringConvert = parseFloat(input);
+  let value = cryptoCurrencies[i].current_price * stringConvert;
+  displayValue = $('<div>'+ value+'USD</div>');
+  $("#crypto-values").append(displayValue);
+});
 }
 
 var formSubmitHandler = function(event) {
@@ -74,21 +84,20 @@ var formSubmitHandler = function(event) {
   // get value from input element
   cryptoName = $("input").first().val();
 
-  if (cryptoName) {
-    var check = false;
+  var check = false;
     for (i=0; i<cryptoNames.length; i++){
       if (cryptoName === cryptoNames[i]){
         displayCryptoInfo(i);
         check = true;
       }
+    } 
+    if (check=false) {
+      alert("Please enter a valid crypto");
     }
     console.log (cryptoName, ' ', check); 
     
     // clear old content
-    $("input").first().val('');
-  } else {
-    alert("Please enter a valid crypto");
-  }
+    $("input").first().val('');  
 };
 
 getCryptoCurrencies();
