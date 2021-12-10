@@ -1,6 +1,7 @@
 var cryptoCurrencies = [];
 var cryptoNames = [];
 var cryptoName = "";
+var savedCrypto = ["Bitcoin", "Dogecoin"];
 var check = false;
 var executed = false;
 
@@ -19,7 +20,8 @@ function getCryptoCurrencies () {
       response.json().then(function(data) {
         cryptoCurrencies = data; 
         console.log(cryptoCurrencies);
-        cryptoListGeneration();    
+        cryptoListGeneration(); 
+        loadCryptoLocally();   
       });
     } else {
       // if not successful
@@ -102,8 +104,10 @@ $(clearCheck).click(function(event){
   let clearBlock = "#crypto-display"+i;
   console.log("cleared");
   $(clearBlock).remove();
+  deleteCryptoLocally();
 });
 }
+
 // executes when user clicks the search button
 var formSubmitHandler = function(event) {
   // prevent page from refreshing
@@ -112,14 +116,24 @@ var formSubmitHandler = function(event) {
   // get value from input element
   cryptoName = $("input").first().val();
 
-  // checks inputted crypto name against available list
   var check = false;
-    for (i=0; i<cryptoNames.length; i++){
-      if (cryptoName === cryptoNames[i]){
-        displayCryptoInfo(i);  //returns i as unique identifier for each crypto based on location in data array
-        check = true;  // changes check to true allowing function to proceed
-      }
+  
+  // checks to see if crypto is already displayed and prevents displaying again
+  for (a=0; a<savedCrypto.length; a++){
+    if (cryptoName === savedCrypto[a]){
+      check = true;
     } 
+  } 
+
+  // checks inputted crypto name against available list
+  if (check === false){
+    for (i=0; i<cryptoNames.length; i++){
+    if (cryptoName === cryptoNames[i]){
+        displayCryptoInfo(i);  //returns i as unique identifier for each crypto based on location in data array
+        saveCryptoLocally();
+        check = true;  // changes check to true allowing function to proceed
+    }
+  }} 
     // if there is not a match against the crypto list, the user will be asked to enter a different name
     if (check === false) {  
       alert("Please enter a valid crypto");
@@ -130,6 +144,25 @@ var formSubmitHandler = function(event) {
     $("input").first().val('');  
 };
 
+function saveCryptoLocally (){
+
+}
+
+function deleteCryptoLocally(){
+
+}
+
+function loadCryptoLocally(){
+  for (b=0; b<savedCrypto.length; b++){
+    cryptoName = savedCrypto[b];
+    for (i=0; i<cryptoNames.length; i++){
+      if (cryptoName === cryptoNames[i]){
+          displayCryptoInfo(i);  //returns i as unique identifier for each crypto based on location in data array
+  }}
+}}
+
 getCryptoCurrencies();  //executes creation of crypto name array
+
+
 
 $("#crypto-input").submit(formSubmitHandler);  //listens for user to click search button
