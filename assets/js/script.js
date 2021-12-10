@@ -1,7 +1,7 @@
 var cryptoCurrencies = [];
 var cryptoNames = [];
 var cryptoName = "";
-var savedCrypto = ["Bitcoin", "Dogecoin"];
+var savedCrypto = [];
 var check = false;
 var executed = false;
 
@@ -104,7 +104,7 @@ $(clearCheck).click(function(event){
   let clearBlock = "#crypto-display"+i;
   console.log("cleared");
   $(clearBlock).remove();
-  deleteCryptoLocally();
+  deleteCryptoLocally(cryptoCurrencies[i].name);
 });
 }
 
@@ -130,7 +130,7 @@ var formSubmitHandler = function(event) {
     for (i=0; i<cryptoNames.length; i++){
     if (cryptoName === cryptoNames[i]){
         displayCryptoInfo(i);  //returns i as unique identifier for each crypto based on location in data array
-        saveCryptoLocally();
+        saveCryptoLocally(i);
         check = true;  // changes check to true allowing function to proceed
     }
   }} 
@@ -144,16 +144,24 @@ var formSubmitHandler = function(event) {
     $("input").first().val('');  
 };
 
-function saveCryptoLocally (){
-
+function saveCryptoLocally (i){
+  savedCrypto.push(cryptoNames[i]);
+  localStorage.setItem('SavedCrypto', JSON.stringify(savedCrypto));
 }
 
-function deleteCryptoLocally(){
-
+function deleteCryptoLocally(name){
+  for (a=0; a<savedCrypto.length; a++){
+    if (name === savedCrypto[a]){
+      savedCrypto.splice($.inArray(name,savedCrypto), 1);
+      console.log(savedCrypto);
+      localStorage.setItem('SavedCrypto', JSON.stringify(savedCrypto));
+    }
+  }
 }
 
 function loadCryptoLocally(){
-  for (b=0; b<savedCrypto.length; b++){
+  savedCrypto = JSON.parse(localStorage.getItem("SavedCrypto"));
+  for (b=0; b<savedCrypto.length; b++){    
     cryptoName = savedCrypto[b];
     for (i=0; i<cryptoNames.length; i++){
       if (cryptoName === cryptoNames[i]){
