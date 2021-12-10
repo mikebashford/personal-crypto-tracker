@@ -66,7 +66,7 @@ var formatter = new Intl.NumberFormat('en-us', {
   currency: 'USD',});
 var DisplayPrice = formatter.format(cryptoCurrencies[i].current_price);
 cryptoDisplay = $('<section id="crypto-display" class="post"></section>');
-cryptoDisplay.append('<header class="post-header"><h2>'+cryptoName+'</h2><h2 id="displayValue">'+ DisplayPrice + '</h2></header>');
+cryptoDisplay.append('<header class="post-header"><h2>'+cryptoName+'</h2><h2 id="displayValue'+i+'">'+ DisplayPrice + '</h2></header>');
 
 coinNoInput = $('<form id="coin-number'+i+'" class="pure-form"></form>');
 coinNofield = $('<fieldset></fieldset>');
@@ -85,7 +85,8 @@ $(formCheck).submit(function(event){
   let stringConvert = parseFloat(input);
   let value = cryptoCurrencies[i].current_price * stringConvert;
   let setValue = formatter.format(value);
-  document.getElementById("displayValue").innerText = setValue;
+  let displayValue = "displayValue"+i;
+  document.getElementById(displayValue).innerText = setValue;
 });
 }
 
