@@ -6,7 +6,7 @@ var executed = false;
 
 function getCryptoCurrencies () {
   
-  if (!executed){
+  if (!executed){  // will only update prices when page is refreshed
   executed = true;
   var apiUrl = "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd";
 
@@ -47,6 +47,7 @@ var getCrytpoPrices = function() {
   });
 };
 
+// creates a list of available crypto coins
 function cryptoListGeneration (){
   for (i=0; i<cryptoCurrencies.length; i++){
      cryptoNames.push(cryptoCurrencies[i].name);     
@@ -54,17 +55,21 @@ function cryptoListGeneration (){
   console.log(cryptoNames)
 };
 
+// provides user a drop down of available crypto based on text entered
 $( function() {
     $( "#crypto" ).autocomplete({
     source: cryptoNames
   });
 } );
 
+// displays the per coin price in USD for the crypto selected
 function displayCryptoInfo(i){
-var formatter = new Intl.NumberFormat('en-us', {
+// formats the price or value in USD
+  var formatter = new Intl.NumberFormat('en-us', {
   style: 'currency',
   currency: 'USD',});
-var DisplayPrice = formatter.format(cryptoCurrencies[i].current_price);
+var DisplayPrice = formatter.format(cryptoCurrencies[i].current_price); //pulls price from stored crypto values
+// adds the section for crypto selected.  Each section is uniquely identified by their location in the cryptoData array
 cryptoDisplay = $('<section id="crypto-display'+i+'" class="post"></section>');
 cryptoDisplay.append('<header class="post-header"><h2>'+cryptoName+'</h2><h2 id="displayValue'+i+'">'+ DisplayPrice + '</h2></header>');
 
@@ -76,20 +81,22 @@ coinNofield.append('<button type="submit" class="pure-button pure-button-seconda
 coinNofield.append('<span id="clear'+i+'"><button type="click" class="pure-button pure-button-primary">Clear</button></span>')
 coinNoInput.append(coinNofield);
 cryptoDisplay.append(coinNoInput);
+// listens for the user to input the number of coins they own
 $("#crypto-values").append(cryptoDisplay);
 var formCheck = "#coin-number"+i;
 var clearCheck = "#clear"+i;
 $(formCheck).submit(function(event){
   event.preventDefault();
   let coins = "#coins"+i;
-  let input = $(coins).val();
+  let input = $(coins).val(); // pulls text value from user input
   console.log(input, formCheck, clearCheck);
-  let stringConvert = parseFloat(input);
-  let value = cryptoCurrencies[i].current_price * stringConvert;
-  let setValue = formatter.format(value);
+  let stringConvert = parseFloat(input); // converts text to decimal value
+  let value = cryptoCurrencies[i].current_price * stringConvert; // multiples coin price times coins owned
+  let setValue = formatter.format(value); //formats value as currency
   let displayValue = "displayValue"+i;
-  document.getElementById(displayValue).innerText = setValue;
+  document.getElementById(displayValue).innerText = setValue; //replaces displayPrice with new setValue
 });
+// listens for user to click clear button and removes associated crypto section
 $(clearCheck).click(function(event){
   event.preventDefault();
   let clearBlock = "#crypto-display"+i;
@@ -97,7 +104,7 @@ $(clearCheck).click(function(event){
   $(clearBlock).remove();
 });
 }
-
+// executes when user clicks the search button
 var formSubmitHandler = function(event) {
   // prevent page from refreshing
   event.preventDefault();
@@ -105,14 +112,16 @@ var formSubmitHandler = function(event) {
   // get value from input element
   cryptoName = $("input").first().val();
 
+  // checks inputted crypto name against available list
   var check = false;
     for (i=0; i<cryptoNames.length; i++){
       if (cryptoName === cryptoNames[i]){
-        displayCryptoInfo(i);
-        check = true;
+        displayCryptoInfo(i);  //returns i as unique identifier for each crypto based on location in data array
+        check = true;  // changes check to true allowing function to proceed
       }
     } 
-    if (check === false) {
+    // if there is not a match against the crypto list, the user will be asked to enter a different name
+    if (check === false) {  
       alert("Please enter a valid crypto");
     }
     console.log (cryptoName, ' ', check); 
@@ -121,6 +130,6 @@ var formSubmitHandler = function(event) {
     $("input").first().val('');  
 };
 
-getCryptoCurrencies();
+getCryptoCurrencies();  //executes creation of crypto name array
 
-$("#crypto-input").submit(formSubmitHandler);
+$("#crypto-input").submit(formSubmitHandler);  //listens for user to click search button
