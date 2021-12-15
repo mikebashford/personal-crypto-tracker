@@ -4,6 +4,8 @@ var cryptoName = "";
 var check = false;
 var executed = false;
 
+var rates = [];
+
 function getCryptoCurrencies () {
   
   if (!executed){
@@ -28,6 +30,24 @@ function getCryptoCurrencies () {
   });
   }
 };
+
+function getExchangeRates() {
+  var apiUrl = "https://api.exchangerate.host/latest";
+
+  fetch(apiUrl).then(function(response) {
+    // IF SUCCESSFUL
+    if (response.ok) {
+      response.json().then(function(data) {
+        rates = data.rates;
+        console.log(rates);
+      });
+    } else {
+      console.log("Error!");
+    }
+  })
+}
+
+
 
 var getCrytpoPrices = function() {
 
@@ -123,3 +143,5 @@ var formSubmitHandler = function(event) {
 getCryptoCurrencies();
 
 $("#crypto-input").submit(formSubmitHandler);
+
+getExchangeRates();
