@@ -93,6 +93,8 @@ coinNofield.append('<button type="submit" class="pure-button button-secondary">S
 coinNofield.append('<span id="clear'+i+'"><button type="click" class="pure-button pure-button-primary button-clear">Clear</button></span>')
 coinNoInput.append(coinNofield);
 cryptoDisplay.append(coinNoInput);
+var widget = createTechAnalysisWidget(cryptoName);
+cryptoDisplay.append(widget);
 // listens for the user to input the number of coins they own
 $("#crypto-values").append(cryptoDisplay);
 var formCheck = "#coin-number"+i;
@@ -238,6 +240,51 @@ function loadCryptoLocally(){
   }} else {
     savedCrypto = [];
   }
+}
+
+function createTechAnalysisWidget(cryptoName)
+{
+  var getSymbol = cryptoName;
+  var containerEl = document.createElement('div');
+  var containerEl1 = document.createElement('div');
+  var containerEl2 = document.createElement('div');
+  var hrefEl = document.createElement('a');
+  var scriptEl = document.createElement('script');
+
+  $(containerEl).addClass("tradingview-widget-container");
+  $(containerEl1).addClass("tradingview-widget-container__widget");
+  $(containerEl2).addClass("tradingview-widget-copyright");
+  $(scriptEl).attr('src', "https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js");
+  $(scriptEl).attr('type', 'text/javascript');
+  $(hrefEl).attr('href', 'https://www.tradingview.com/symbols/BTCUSDT/technicals/');
+  $(hrefEl).attr('rel', 'noopener');
+  $(hrefEl).attr('target', '_blank');
+
+  $(containerEl2).append(hrefEl);
+
+  getSymbol = getSymbol.toLowerCase();
+
+  var lookup = {};
+  for (var i = 0; i < cryptoCurrencies.length; i++) {
+      var currencies = (lookup[cryptoCurrencies[i].symbol] = cryptoCurrencies[i]);
+      if(getSymbol === currencies.id)
+      {
+        getSymbol = currencies.symbol;
+      }
+  }
+
+  $(scriptEl).text(JSON.stringify({  
+    "interval": "1m",
+    "width": "100%",
+    "isTransparent": false,
+    "height": "100%",
+    "symbol": 'BINANCE:' + getSymbol.toUpperCase() + 'USDT',
+    "showIntervalTabs": true,
+    "locale": "en",
+    "colorTheme": "dark"
+  }));
+
+  return $(containerEl).append(containerEl1, containerEl2, scriptEl);
 }
 
 getCryptoCurrencies();  //executes creation of crypto name array
