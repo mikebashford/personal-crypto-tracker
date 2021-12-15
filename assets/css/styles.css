@@ -1,12 +1,24 @@
+:root {
+    --dgreen: #143601;
+    --mgreen: #538d22;
+    --lgreen: #a9c691;
+    --dgrey: #171717;
+}
+
 * {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
+}
+
+html {
+    background-color:var(--dgrey);
 }
 
 a {
     text-decoration: none;
-    color: rgb(61, 146, 201);
+    color: var(--lgreen);
 }
 a:hover,
 a:focus {
@@ -38,8 +50,8 @@ h3 {
 }
 
 .sidebar {
-    background: rgb(61, 79, 93);
-    color: #fff;
+    background: black;
+    color: var(--mgreen);
 }
 
 .brand-title,
@@ -51,7 +63,7 @@ h3 {
 }
 .brand-tagline {
     font-weight: 300;
-    color: rgb(176, 202, 219);
+    color: var(--lgreen);
 }
 
 .nav-list {
@@ -66,8 +78,8 @@ h3 {
 }
 .nav-item a {
     background: transparent;
-    border: 2px solid rgb(176, 202, 219);
-    color: #fff;
+    border: 2px solid var(--mgreen);
+    color: var(--lgreen);
     margin-top: 1em;
     letter-spacing: 0.05em;
     text-transform: uppercase;
@@ -75,7 +87,7 @@ h3 {
 }
 .nav-item a:hover,
 .nav-item a:focus {
-    border: 2px solid rgb(61, 146, 201);
+    border: 2px solid black;
     text-decoration: none;
 }
 
@@ -95,6 +107,9 @@ h3 {
 
 .post {
     padding-bottom: 2em;
+    background-color: var(--mgreen);
+    border-radius: 25px;
+    text-align: center;
 }
 .post-title {
     font-size: 2em;
@@ -117,41 +132,11 @@ h3 {
     margin: 0;
 }
 
-.post-category {
-    margin: 0 0.1em;
-    padding: 0.3em 1em;
-    color: #fff;
-    background: #999;
-    font-size: 80%;
-}
-    .post-category-design {
-        background: #5aba59;
-    }
-    .post-category-pure {
-        background: #4d85d1;
-    }
-    .post-category-yui {
-        background: #8156a7;
-    }
-    .post-category-js {
-        background: #df2d4f;
-    }
-
-.post-images {
-    margin: 1em 0;
-}
-.post-image-meta {
-    margin-top: -3.5em;
-    margin-left: 1em;
-    color: #fff;
-    text-shadow: 0 1px 1px #333;
-}
-
 .footer {
     padding: 1em 0;
 }
 .footer a {
-    color: #ccc;
+    color: var(--mgreen);
     font-size: 80%;
 }
 .footer .pure-menu a:hover,
@@ -179,4 +164,23 @@ h3 {
     .footer {
         text-align: center;
     }
+}
+
+.button-success,
+.button-secondary, .button-clear {
+    color: white;
+    border-radius: 4px;
+    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.button-success {
+    background:var(--mgreen);
+    }
+
+.button-secondary {
+    background: var(--dgreen);
+}
+
+.button-clear {
+    background-color: black;
 }
