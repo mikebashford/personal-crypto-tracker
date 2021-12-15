@@ -93,7 +93,9 @@ coinNofield.append('<button type="submit" class="pure-button button-secondary">S
 coinNofield.append('<span id="clear'+i+'"><button type="click" class="pure-button pure-button-primary button-clear">Clear</button></span>')
 coinNoInput.append(coinNofield);
 cryptoDisplay.append(coinNoInput);
+//create our widget for each crypto
 var widget = createTechAnalysisWidget(cryptoName);
+//append to the div with it's siblings information
 cryptoDisplay.append(widget);
 // listens for the user to input the number of coins they own
 $("#crypto-values").append(cryptoDisplay);
@@ -244,13 +246,16 @@ function loadCryptoLocally(){
 
 function createTechAnalysisWidget(cryptoName)
 {
+  //grab the crypto passed in to get the symbol
   var getSymbol = cryptoName;
+  //create our widget elements
   var containerEl = document.createElement('div');
   var containerEl1 = document.createElement('div');
   var containerEl2 = document.createElement('div');
   var hrefEl = document.createElement('a');
   var scriptEl = document.createElement('script');
 
+  //add classes and attributes to our elements
   $(containerEl).addClass("tradingview-widget-container");
   $(containerEl).attr('id', 'tech');
   $(containerEl1).addClass("tradingview-widget-container__widget");
@@ -260,19 +265,24 @@ function createTechAnalysisWidget(cryptoName)
   $(hrefEl).attr('href', 'https://www.tradingview.com/symbols/BTCUSD/technicals/');
   $(hrefEl).attr('rel', 'noopener');
   $(hrefEl).attr('target', '_blank');
+  //append the href to the correct container
   $(containerEl2).append(hrefEl);
 
+  //convert our user input
   getSymbol = getSymbol.toLowerCase();
 
+  //search through our database of cryptos by id
   var lookup = {};
   for (var i = 0; i < cryptoCurrencies.length; i++) {
       var currencies = (lookup[cryptoCurrencies[i].symbol] = cryptoCurrencies[i]);
       if(getSymbol === currencies.id)
       {
+        //grab our cryptos ticker symbol
         getSymbol = currencies.symbol;
       }
   }
 
+  //add the script to the widget with our symbol we grabbed
   $(scriptEl).text(JSON.stringify({  
     "interval": "5m",
     "width": "400",
@@ -284,17 +294,22 @@ function createTechAnalysisWidget(cryptoName)
     "colorTheme": "dark"
   }));
 
+  //put the widget back together
   return $(containerEl).append(containerEl1, containerEl2, scriptEl);
 }
 
 function createTickerWidget()
 {
+  //create our widget elements 
+  //TODO: redundant code from previous widget
   var containerEl = document.createElement('div');
   var containerEl1 = document.createElement('div');
   var containerEl2 = document.createElement('div');
   var hrefEl = document.createElement('a');
   var scriptEl = document.createElement('script');
 
+  //add classes and attributes to our elements
+  //TODO: redundant code from previous widget
   $(containerEl).addClass("tradingview-widget-container");
   $(containerEl1).addClass("tradingview-widget-container__widget");
   $(containerEl2).addClass("tradingview-widget-copyright");
@@ -305,6 +320,7 @@ function createTickerWidget()
   $(hrefEl).attr('target', '_blank');
   $(containerEl2).append(hrefEl);
 
+  //Add our script to the widget with hard coded cryptos
   $(scriptEl).text(JSON.stringify(
     {
       "symbols": [
@@ -352,18 +368,20 @@ function createTickerWidget()
         "colorTheme": "dark",
         "isTransparent": false,
         "showSymbolLogo": true,
-        "displayMode": "adaptive",
+        "displayMode": "regular",
         "locale": "en"
     }
   ));
 
+  //put the widget together
   $(containerEl).append(containerEl1, containerEl2, scriptEl);
+  //prepend so this is at the top of the page
   return $('.ticker').prepend(containerEl);
 }
 
 function createChartWidget()
 {
-  var widget = JSON.stringify( new TradingView.widget(
+  JSON.stringify( new TradingView.widget(
     {
         
       "width": 900,
