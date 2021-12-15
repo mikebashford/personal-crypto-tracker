@@ -136,7 +136,21 @@ var formSubmitHandler = function(event) {
   }} 
     // if there is not a match against the crypto list, the user will be asked to enter a different name
     if (check === false) {  
-      alert("Please enter a valid crypto");
+      // modal is triggered
+      var modal = document.getElementById("myModal");
+      var span = document.getElementsByClassName("close")[0];
+      modal.style.display = "block";
+      //when the user clicks on <span> (X), close the modal
+      span.onClick = function() {
+        modal.style.display = "none";
+      }
+      //when the user clicks anywehre outside of the modal, close it
+      window.onClick = function(event) {
+        if (event.target ===modal) {
+          modal.style.display = "none";
+        }
+      }
+      //alert("Please enter a valid crypto");
     }
     console.log (cryptoName, ' ', check); 
     
