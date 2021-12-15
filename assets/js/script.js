@@ -252,6 +252,7 @@ function createTechAnalysisWidget(cryptoName)
   var scriptEl = document.createElement('script');
 
   $(containerEl).addClass("tradingview-widget-container");
+  $(containerEl).attr('id', 'tech');
   $(containerEl1).addClass("tradingview-widget-container__widget");
   $(containerEl2).addClass("tradingview-widget-copyright");
   $(scriptEl).attr('src', "https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js");
@@ -274,10 +275,10 @@ function createTechAnalysisWidget(cryptoName)
   }
 
   $(scriptEl).text(JSON.stringify({  
-    "interval": "1m",
-    "width": "100%",
+    "interval": "5m",
+    "width": "400",
     "isTransparent": false,
-    "height": "100%",
+    "height": "425",
     "symbol": 'BINANCE:' + getSymbol.toUpperCase() + 'USDT',
     "showIntervalTabs": true,
     "locale": "en",
