@@ -54,6 +54,10 @@ h3 {
     color: var(--mgreen);
 }
 
+.sidebar-block {
+    margin-bottom: .7em;
+}
+
 .brand-title,
 .brand-tagline {
     margin: 0;
@@ -133,11 +137,15 @@ h3 {
 }
 
 .footer {
+    text-align: center;
     padding: 1em 0;
+    position: fixed;
+    height: .5em;
+    margin-top: -.5em;
 }
 .footer a {
-    color: var(--mgreen);
-    font-size: 80%;
+    color: var(--lgreen);
+    font-size: 100%;
 }
 .footer .pure-menu a:hover,
 .footer .pure-menu a:focus {
@@ -163,14 +171,37 @@ h3 {
 
     .footer {
         text-align: center;
+        overflow-wrap: normal;
     }
 }
+
+@media only screen and (max-width: 480px) {
+    .inputText {
+        display: inline !important;
+    }
+
+    button {
+        margin: 0em 0 0 !important;
+    }
+
+    input {
+        display: inline !important;
+        margin-bottom: 0em !important;
+    }
+}
+
+input {
+    margin-right: .2em;
+}
+
 
 .button-success,
 .button-secondary, .button-clear {
     color: white;
     border-radius: 4px;
     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    padding: .6em;
+    margin-left: .2em;
 }
 
 .button-success {
