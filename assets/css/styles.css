@@ -134,6 +134,8 @@ h3 {
 
 .footer {
     padding: 1em 0;
+    border-top: #aaa solid 1px;
+    margin-top: 1em;
 }
 .footer a {
     color: var(--mgreen);
