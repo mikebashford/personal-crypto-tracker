@@ -2,6 +2,8 @@ var cryptoCurrencies = [];
 var cryptoNames = [];
 var cryptoName = "";
 var savedCrypto = [];
+var exchRate = [];
+var rate = "";
 var check = false;
 var executed = false;
 
@@ -22,6 +24,7 @@ function getCryptoCurrencies () {
         console.log(cryptoCurrencies);
         cryptoListGeneration(); 
         loadCryptoLocally();   
+        exchangeRates();
       });
     } else {
       // if not successful
@@ -30,17 +33,18 @@ function getCryptoCurrencies () {
   });
   }
 };
+// api call for current exchange rates
+function exchangeRates () {
 
-var getCrytpoPrices = function() {
-
-  var apiUrl = "https://api.kucoin.com/api/v1/prices";
+  var apiUrl = "https://api.exchangerate.host/latest";
 
   // make a get request to url
   fetch(apiUrl).then(function(response) {
     // request was successful
     if (response.ok) {
       response.json().then(function(data) {
-        console.log(data);          
+        exchRate.push(data.rates); 
+        console.log(exchRate);          
       });
     } else {
       // if not successful, redirect to homepage
@@ -67,10 +71,13 @@ $( function() {
 // displays the per coin price in USD for the crypto selected
 function displayCryptoInfo(i){
 // formats the price or value in USD
-  var formatter = new Intl.NumberFormat('en-us', {
+var formatter = new Intl.NumberFormat('en-us', {
   style: 'currency',
   currency: 'USD',});
+var setValue = 0;
+rate = 1;
 var DisplayPrice = formatter.format(cryptoCurrencies[i].current_price); //pulls price from stored crypto values
+var displayValue = "";
 // adds the section for crypto selected.  Each section is uniquely identified by their location in the cryptoData array
 cryptoDisplay = $('<section id="crypto-display'+i+'" class="post"></section>');
 cryptoDisplay.append('<header class="post-header"><h2>'+cryptoName+'</h2><h2 id="displayValue'+i+'">'+ DisplayPrice + '</h2></header>');
@@ -78,7 +85,10 @@ cryptoDisplay.append('<header class="post-header"><h2>'+cryptoName+'</h2><h2 id=
 coinNoInput = $('<form id="coin-number'+i+'" class="pure-form"></form>');
 coinNofield = $('<fieldset></fieldset>');
 coinNofield.append('<input id="coins'+i+'" type="text" placeholder="Amount of Coins" />');
-coinNofield.append('<select id="currency" name="currency"><option value="USD">USD</option><option value="EUR">EUR</option></select>');
+coinNofield.append('<select id="currency'+i+'" name="currency">\
+<option value="USD">USD</option><option value="EUR">EUR</option> \
+<option value="GBP">GBP</option><option value="CNY">CNY</option> \
+<option value="JPY">JPY</option><option value="KRW">KRW</option></select>');
 coinNofield.append('<button type="submit" class="pure-button button-secondary">Submit</button>');
 coinNofield.append('<span id="clear'+i+'"><button type="click" class="pure-button pure-button-primary button-clear">Clear</button></span>')
 coinNoInput.append(coinNofield);
@@ -87,15 +97,19 @@ cryptoDisplay.append(coinNoInput);
 $("#crypto-values").append(cryptoDisplay);
 var formCheck = "#coin-number"+i;
 var clearCheck = "#clear"+i;
+var changeCurrency = "#currency"+i;
+var coins = "#coins"+i;
+var value = 0;
+var stringConvert = 0;
+// listens for user to input coins and updates displayed value based on number of coins inputted
 $(formCheck).submit(function(event){
-  event.preventDefault();
-  let coins = "#coins"+i;
+  event.preventDefault();  
   let input = $(coins).val(); // pulls text value from user input
   console.log(input, formCheck, clearCheck);
-  let stringConvert = parseFloat(input); // converts text to decimal value
-  let value = cryptoCurrencies[i].current_price * stringConvert; // multiples coin price times coins owned
-  let setValue = formatter.format(value); //formats value as currency
-  let displayValue = "displayValue"+i;
+  stringConvert = parseFloat(input); // converts text to decimal value
+  value = cryptoCurrencies[i].current_price * stringConvert * rate; // multiples coin price times coins owned
+  setValue = formatter.format(value); //formats value as currency
+  displayValue = "displayValue"+i;
   document.getElementById(displayValue).innerText = setValue; //replaces displayPrice with new setValue
 });
 // listens for user to click clear button and removes associated crypto section
@@ -106,6 +120,57 @@ $(clearCheck).click(function(event){
   $(clearBlock).remove();
   deleteCryptoLocally(cryptoCurrencies[i].name);
 });
+// listens for changes to currency drop down list and updates displayed value using exchange rate
+$(changeCurrency).change(function(event){
+  event.preventDefault();
+  let currencySelected = "#currency"+i+" option:selected";
+  let exchange = $(currencySelected).text();
+  console.log(exchange);
+
+  switch (exchange){
+    case 'USD': rate = exchRate[0].USD;
+      formatter = new Intl.NumberFormat('en-us', {
+        style: 'currency',
+        currency: 'USD',});
+      break;
+    case 'EUR': rate = exchRate[0].EUR;
+      formatter = new Intl.NumberFormat('en-us', {
+        style: 'currency',
+        currency: 'EUR',});
+      break;
+    case 'GBP': rate = exchRate[0].GBP;
+      formatter = new Intl.NumberFormat('en-us', {
+        style: 'currency',
+        currency: 'GBP',});
+      break;  
+    case 'CNY': rate = exchRate[0].CNY;
+      formatter = new Intl.NumberFormat('en-us', {
+        style: 'currency',
+        currency: 'CNY',});
+      break;  
+    case 'JPY': rate = exchRate[0].JPY;
+      formatter = new Intl.NumberFormat('en-us', {
+        style: 'currency',
+        currency: 'JPY',});
+      break;  
+    case 'KRW': rate = exchRate[0].KRW;
+      formatter = new Intl.NumberFormat('en-us', {
+        style: 'currency',
+        currency: 'KRW',});
+      break;  
+  }
+  rate = parseFloat(rate);
+  // checks to see if there are coins provided or not
+  if (stringConvert){
+  setValue = formatter.format(cryptoCurrencies[i].current_price * stringConvert * rate);
+  } else {
+    displayValue = "displayValue"+i;
+    setValue = formatter.format(cryptoCurrencies[i].current_price * rate);
+    console.log(cryptoCurrencies[i].current_price, rate);
+  }
+  document.getElementById(displayValue).innerText = setValue; 
+  console.log(value, rate, setValue);
+})
 }
 
 // executes when user clicks the search button
