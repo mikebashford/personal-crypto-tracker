@@ -93,6 +93,10 @@ coinNofield.append('<button type="submit" class="pure-button button-secondary">S
 coinNofield.append('<span id="clear'+i+'"><button type="click" class="pure-button pure-button-primary button-clear">Clear</button></span>')
 coinNoInput.append(coinNofield);
 cryptoDisplay.append(coinNoInput);
+//create our widget for each crypto
+var widget = createTechAnalysisWidget(cryptoName);
+//append to the div with it's siblings information
+cryptoDisplay.append(widget);
 // listens for the user to input the number of coins they own
 $("#crypto-values").append(cryptoDisplay);
 var formCheck = "#coin-number"+i;
@@ -240,6 +244,165 @@ function loadCryptoLocally(){
   }
 }
 
+function createTechAnalysisWidget(cryptoName)
+{
+  //grab the crypto passed in to get the symbol
+  var getSymbol = cryptoName;
+  //create our widget elements
+  var containerEl = document.createElement('div');
+  var containerEl1 = document.createElement('div');
+  var containerEl2 = document.createElement('div');
+  var hrefEl = document.createElement('a');
+  var scriptEl = document.createElement('script');
+
+  //add classes and attributes to our elements
+  $(containerEl).addClass("tradingview-widget-container");
+  $(containerEl).attr('id', 'tech');
+  $(containerEl1).addClass("tradingview-widget-container__widget");
+  $(containerEl2).addClass("tradingview-widget-copyright");
+  $(scriptEl).attr('src', "https://s3.tradingview.com/external-embedding/embed-widget-technical-analysis.js");
+  $(scriptEl).attr('type', 'text/javascript');
+  $(hrefEl).attr('href', 'https://www.tradingview.com/symbols/BTCUSD/technicals/');
+  $(hrefEl).attr('rel', 'noopener');
+  $(hrefEl).attr('target', '_blank');
+  //append the href to the correct container
+  $(containerEl2).append(hrefEl);
+
+  //convert our user input
+  getSymbol = getSymbol.toLowerCase();
+
+  //search through our database of cryptos by id
+  var lookup = {};
+  for (var i = 0; i < cryptoCurrencies.length; i++) {
+      var currencies = (lookup[cryptoCurrencies[i].symbol] = cryptoCurrencies[i]);
+      if(getSymbol === currencies.id)
+      {
+        //grab our cryptos ticker symbol
+        getSymbol = currencies.symbol;
+      }
+  }
+
+  //add the script to the widget with our symbol we grabbed
+  $(scriptEl).text(JSON.stringify({  
+    "interval": "5m",
+    "width": "400",
+    "isTransparent": false,
+    "height": "425",
+    "symbol": 'COINBASE:' + getSymbol.toUpperCase() + 'USD',
+    "showIntervalTabs": true,
+    "locale": "en",
+    "colorTheme": "dark"
+  }));
+
+  //put the widget back together
+  return $(containerEl).append(containerEl1, containerEl2, scriptEl);
+}
+
+function createTickerWidget()
+{
+  //create our widget elements 
+  //TODO: redundant code from previous widget
+  var containerEl = document.createElement('div');
+  var containerEl1 = document.createElement('div');
+  var containerEl2 = document.createElement('div');
+  var hrefEl = document.createElement('a');
+  var scriptEl = document.createElement('script');
+
+  //add classes and attributes to our elements
+  //TODO: redundant code from previous widget
+  $(containerEl).addClass("tradingview-widget-container");
+  $(containerEl1).addClass("tradingview-widget-container__widget");
+  $(containerEl2).addClass("tradingview-widget-copyright");
+  $(scriptEl).attr('src', "https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js");
+  $(scriptEl).attr('type', 'text/javascript');
+  $(hrefEl).attr('href', 'https://www.tradingview.com');
+  $(hrefEl).attr('rel', 'noopener');
+  $(hrefEl).attr('target', '_blank');
+  $(containerEl2).append(hrefEl);
+
+  //Add our script to the widget with hard coded cryptos
+  $(scriptEl).text(JSON.stringify(
+    {
+      "symbols": [
+        {
+            "proName": "BITSTAMP:BTCUSD",
+            "title": "Bitcoin"
+        },
+        {
+            "proName": "BITSTAMP:ETHUSD",
+            "title": "Ethereum"
+        },
+        {
+            "description": "Cardano",
+            "proName": "BITFINEX:ADAUSD"
+        },
+        {
+            "description": "XRP",
+            "proName": "BITSTAMP:XRPUSD"
+        },
+        {
+            "description": "Tether",
+            "proName": "COINBASE:USDTUSD"
+        },
+        {
+            "description": "Dogecoin",
+            "proName": "BITFINEX:DOGEUSD"
+        },
+        {
+            "description": "Polkadot",
+            "proName": "BITFINEX:DOTUSD"
+        },
+        {
+            "description": "USD Coin",
+            "proName": "CURRENCYCOM:USDCUSD"
+        },
+        {
+            "description": "Solana",
+            "proName": "BINANCEUS:SOLUSD"
+        },
+        {
+            "description": "Binance Coin",
+            "proName": "BINANCE:BNBUSD"
+        }
+        ],
+        "colorTheme": "dark",
+        "isTransparent": false,
+        "showSymbolLogo": true,
+        "displayMode": "regular",
+        "locale": "en"
+    }
+  ));
+
+  //put the widget together
+  $(containerEl).append(containerEl1, containerEl2, scriptEl);
+  //prepend so this is at the top of the page
+  return $('.ticker').prepend(containerEl);
+}
+
+function createChartWidget()
+{
+  JSON.stringify( new TradingView.widget(
+    {
+        
+      "width": 900,
+      "height": 450,
+      "symbol": "COINBASE:BTCUSD",
+      "interval": "D",
+      "timezone": "Etc/UTC",
+      "theme": "dark",
+      "style": "1",
+      "locale": "en",
+      "toolbar_bg": "#f1f3f6",
+      "enable_publishing": false,
+      "allow_symbol_change": true,
+      "container_id": "tradingview_176a8"
+        
+    }
+  ));
+}
+
+createChartWidget(); //sets up the chart to the symbol value
+createTickerWidget(); //creates the ticker widget with hardcoded cryptos
 getCryptoCurrencies();  //executes creation of crypto name array
 
 $("#crypto-input").submit(formSubmitHandler);  //listens for user to click search button
