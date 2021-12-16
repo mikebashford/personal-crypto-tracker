@@ -142,6 +142,7 @@ h3 {
     position: fixed;
     height: .5em;
     margin-top: -.5em;
+    border-top: #eee solid 1px;
 }
 .footer a {
     color: var(--lgreen);
@@ -219,4 +220,9 @@ input {
 #tech
 {
     margin: auto;
+}
+
+.widget-section
+{
+    
 }
