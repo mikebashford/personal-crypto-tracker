@@ -139,7 +139,7 @@ h3 {
 .footer {
     text-align: center;
     padding: 1em 0;
-    position: fixed;
+    
     height: .5em;
     margin-top: -.5em;
     border-top: #eee solid 1px;
