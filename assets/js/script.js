@@ -31,15 +31,15 @@ function getCryptoCurrencies () {
       console.log(response.status);
     }
   });
+
   }
 };
 // api call for current exchange rates
 function exchangeRates () {
 
   var apiUrl = "https://api.exchangerate.host/latest";
-
   // make a get request to url
-  fetch(apiUrl).then(function(response) {
+  fetch(apiUrl).then(function (response) {
     // request was successful
     if (response.ok) {
       response.json().then(function(data) {
@@ -54,19 +54,19 @@ function exchangeRates () {
 };
 
 // creates a list of available crypto coins
-function cryptoListGeneration (){
-  for (i=0; i<cryptoCurrencies.length; i++){
-     cryptoNames.push(cryptoCurrencies[i].name);     
+function cryptoListGeneration() {
+  for (i = 0; i < cryptoCurrencies.length; i++) {
+    cryptoNames.push(cryptoCurrencies[i].name);
   }
   console.log(cryptoNames)
 };
 
 // provides user a drop down of available crypto based on text entered
-$( function() {
-    $( "#crypto" ).autocomplete({
+$(function () {
+  $("#crypto").autocomplete({
     source: cryptoNames
   });
-} );
+});
 
 // displays the per coin price in USD for the crypto selected
 function displayCryptoInfo(i){
@@ -178,51 +178,66 @@ $(changeCurrency).change(function(event){
 }
 
 // executes when user clicks the search button
-var formSubmitHandler = function(event) {
+var formSubmitHandler = function (event) {
   // prevent page from refreshing
   event.preventDefault();
-  
+
   // get value from input element
   cryptoName = $("input").first().val();
 
   var check = false;
-  
+
   // checks to see if crypto is already displayed and prevents displaying again
-  for (a=0; a<savedCrypto.length; a++){
-    if (cryptoName === savedCrypto[a]){
+  for (a = 0; a < savedCrypto.length; a++) {
+    if (cryptoName === savedCrypto[a]) {
       check = true;
-    } 
-  } 
+    }
+  }
 
   // checks inputted crypto name against available list
-  if (check === false){
-    for (i=0; i<cryptoNames.length; i++){
-    if (cryptoName === cryptoNames[i]){
+  if (check === false) {
+    for (i = 0; i < cryptoNames.length; i++) {
+      if (cryptoName === cryptoNames[i]) {
         displayCryptoInfo(i);  //returns i as unique identifier for each crypto based on location in data array
         saveCryptoLocally(i);
         check = true;  // changes check to true allowing function to proceed
+      }
     }
-  }} 
-    // if there is not a match against the crypto list, the user will be asked to enter a different name
-    if (check === false) {  
-      alert("Please enter a valid crypto");
+  }
+  // if there is not a match against the crypto list, the user will be asked to enter a different name
+  if (check === false) {
+    // modal is triggered
+    var modal = document.getElementById("myModal");
+    var span = document.getElementsByClassName("close")[0];
+    modal.style.display = "block";
+    //when the user clicks on <span> (X), close the modal
+    span.onclick = function () {
+      modal.style.display = "none";
     }
-    console.log (cryptoName, ' ', check); 
-    
-    // clear old content
-    $("input").first().val('');  
+    //when the user clicks anywehre outside of the modal, close it
+    window.onclick = function (event) {
+      if (event.target === modal) {
+        modal.style.display = "none";
+      }
+    }
+    //alert("Please enter a valid crypto");
+  }
+  console.log(cryptoName, ' ', check);
+
+  // clear old content
+  $("input").first().val('');
 };
 // saves crypto name to local storage
-function saveCryptoLocally (i){
+function saveCryptoLocally(i) {
   savedCrypto.push(cryptoNames[i]);
   localStorage.setItem('SavedCrypto', JSON.stringify(savedCrypto));
 }
 
 // deletes crypto from local storage when cleared from page
-function deleteCryptoLocally(name){
-  for (a=0; a<savedCrypto.length; a++){
-    if (name === savedCrypto[a]){
-      savedCrypto.splice($.inArray(name,savedCrypto), 1);
+function deleteCryptoLocally(name) {
+  for (a = 0; a < savedCrypto.length; a++) {
+    if (name === savedCrypto[a]) {
+      savedCrypto.splice($.inArray(name, savedCrypto), 1);
       console.log(savedCrypto);
       localStorage.setItem('SavedCrypto', JSON.stringify(savedCrypto));
     }
@@ -230,16 +245,18 @@ function deleteCryptoLocally(name){
 }
 
 //loads the locally saved cryptos
-function loadCryptoLocally(){
+function loadCryptoLocally() {
   savedCrypto = JSON.parse(localStorage.getItem("SavedCrypto"));
-  if (savedCrypto != null){
-    for (b=0; b<savedCrypto.length; b++){    
+  if (savedCrypto != null) {
+    for (b = 0; b < savedCrypto.length; b++) {
       cryptoName = savedCrypto[b];
-      for (i=0; i<cryptoNames.length; i++){
-        if (cryptoName === cryptoNames[i]){
-          displayCryptoInfo(i);  
-      }}
-  }} else {
+      for (i = 0; i < cryptoNames.length; i++) {
+        if (cryptoName === cryptoNames[i]) {
+          displayCryptoInfo(i);
+        }
+      }
+    }
+  } else {
     savedCrypto = [];
   }
 }
