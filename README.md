@@ -11,7 +11,7 @@ A website that allows you search for crypto, enter the amount you own, and conve
 * CoinGecko API
 * Exchange Rate API
 ## Website
-https://github.com/mikebashford/personal-crypto-tracker
+https://mikebashford.github.io/personal-crypto-tracker/
 ![Screenshot](./assets/images/personal-crypto-tracker.png)
 ## Contribution
 Made by Mike Bashford, Robert Clarady, Margaret Barrera, Michelle Jordan
